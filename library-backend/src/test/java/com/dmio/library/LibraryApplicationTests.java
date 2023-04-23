@@ -1,10 +1,10 @@
-package com.revision.rentapp;
+package com.dmio.library;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RentappApplicationTests {
+class LibraryApplicationTests {
 
 	@Test
 	void contextLoads() {
