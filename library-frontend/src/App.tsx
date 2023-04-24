@@ -1,10 +1,13 @@
 import React from "react";
-import "./App.css";
 import { Navbar } from "./layouts/NavbarAndFooter/Navbar";
+import { NewBooks } from "./layouts/HomePage/NewBooks";
 
 function App() {
   return (
-    <Navbar />
+    <>
+      <Navbar />
+      <NewBooks />
+    </>
   );
 }
 
