@@ -35,6 +35,11 @@ code {
   background-color: #0e76a8;
 }
 
+.lost-image {
+  background-image: url("https://picsum.photos/720/540");
+  height: 25em !important;
+}
+
 .homepage-carousel-title {
   display: flex !important;
   justify-content: center !important;
