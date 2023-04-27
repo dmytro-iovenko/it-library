@@ -1,15 +1,18 @@
-export const BookItem = () => {
+import React from "react";
+import { BookModel } from "../../../models/BookModel";
+
+export const BookItem: React.FC<{ book: BookModel }> = ({ book }) => {
   return (
     <div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb-3">
       <div className="text-center">
         <img
-          src="https://picsum.photos/151/233"
+          src={book.image}
           width={151}
           height={233}
           alt="book"
         />
-        <h6 className="mt-2">Book</h6>
-        <p>John Dou</p>
+        <h6 className="mt-2">{book.title}</h6>
+        {/* <p>{book.subtitle}</p> */}
         <a className="btn main-color text-white" href="#">
           Reserve
         </a>
