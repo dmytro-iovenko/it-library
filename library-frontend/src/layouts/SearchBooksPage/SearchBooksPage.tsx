@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { BookModel } from "../../models/BookModel";
-import { SearchBooksItem } from "./components/SearchBooksItem";
 import { Pagination } from "../Utils/Pagination";
+import { SearchBooksItem } from "./components/SearchBooksItem";
+import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import * as BooksAPI from "../../services/itbooks-api";
 
 export const SearchBooksPage = () => {
@@ -14,20 +15,26 @@ export const SearchBooksPage = () => {
   const [query, setQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const startSearch = () => query !== "" && setSearchQuery(query);
+  const startSearch = () =>
+    query.trim().length > 0 && setSearchQuery(query.trim());
 
   useEffect(() => {
-    BooksAPI.searchBooks(searchQuery, currentPage)
-      .then((resultData: any) => {
-        setBooks(resultData.books);
-        setTotalBooks(resultData.total);
-        setTotalPages(Math.ceil(resultData.total / 10));
-      })
-      .catch((error: any) => {
-        setHttpError(error.message);
-      });
+    searchQuery.length > 0 &&
+      BooksAPI.searchBooks(searchQuery, currentPage)
+        .then((resultData: any) => {
+          setBooks(resultData.books);
+          setTotalBooks(resultData.total);
+          setTotalPages(Math.ceil(resultData.total / 10));
+        })
+        .catch((error: any) => {
+          setHttpError(error.message);
+        });
     setIsLoading(false);
   }, [currentPage, searchQuery]);
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
 
   if (httpError) {
     return (
@@ -40,7 +47,6 @@ export const SearchBooksPage = () => {
   return (
     <div>
       <div className="container">
-        {/* <div> */}
         <div className="row mt-5">
           <div className="col-12">
             <div className="d-flex">
@@ -52,36 +58,47 @@ export const SearchBooksPage = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <button
-                className="btn btn-outline-success"
-                onClick={startSearch}
-              >
+              <button className="btn btn-outline-success" onClick={startSearch}>
                 Search
               </button>
             </div>
           </div>
         </div>
-        <div className="mt-3">
-          <h5>Number of results: ({totalBooks})</h5>
-        </div>
-        <p>
-          {currentPage * 10 - 9} to {Math.min(currentPage * 10, totalBooks)} of{" "}
-          {totalBooks} items:
-        </p>
-        <div className="row grid-style">
-          {books.map((book) => (
-            <SearchBooksItem book={book} key={book.isbn13} />
-          ))}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
-          )}
-        </div>
+        {totalBooks > 0 ? (
+          <>
+            <div className="mt-3">
+              <h5>Number of results: ({totalBooks})</h5>
+            </div>
+            <p>
+              {currentPage * 10 - 9} to {Math.min(currentPage * 10, totalBooks)}{" "}
+              of {totalBooks} items:
+            </p>
+            <div className="row grid-style">
+              {books.map((book) => (
+                <SearchBooksItem book={book} key={book.isbn13} />
+              ))}
+              {totalPages > 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="m-5 text-center">
+            <h3>Can't find what you are looking for?</h3>
+            <a
+              type="button"
+              className="btn btn-outline-primary main-color px-4 fw-bold text-white"
+              href="#"
+            >
+              Library Services
+            </a>
+          </div>
+        )}
       </div>
-      {/* </div> */}
     </div>
   );
 };
