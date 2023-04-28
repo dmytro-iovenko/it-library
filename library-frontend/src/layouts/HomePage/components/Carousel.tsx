@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { BookItem } from "./BookItem";
 import { BookModel } from "../../../models/BookModel";
-import * as BooksAPI from "../../../services/itbooks-api";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
+import * as BooksAPI from "../../../services/itbooks-api";
 
 interface Response {
   title: string;
