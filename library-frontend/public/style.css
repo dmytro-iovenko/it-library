@@ -55,3 +55,10 @@ code {
   pointer-events: none;
   cursor: default;
 }
+
+@media (min-width: 1200px) {
+  .col-xl-5th {
+  flex: 0 0 auto;
+  width: 20%;
+  }
+}

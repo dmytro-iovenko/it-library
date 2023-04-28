@@ -2,12 +2,14 @@ import React from "react";
 import { Navbar } from "./layouts/NavbarAndFooter/Navbar";
 import { HomePage } from "./layouts/HomePage/HomePage";
 import { Footer } from "./layouts/NavbarAndFooter/Footer";
+import { SearchBooksPage } from "./layouts/SearchBooksPage/SearchBooksPage";
 
 export const App = () => {
   return (
     <>
       <Navbar />
-      <HomePage />
+      {/* <HomePage /> */}
+      <SearchBooksPage />
       <Footer />
     </>
   );
