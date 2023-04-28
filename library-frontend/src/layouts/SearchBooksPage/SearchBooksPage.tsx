@@ -11,9 +11,13 @@ export const SearchBooksPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalBooks, setTotalBooks] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [query, setQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const startSearch = () => query !== "" && setSearchQuery(query);
 
   useEffect(() => {
-    BooksAPI.searchBooks("sql", currentPage)
+    BooksAPI.searchBooks(searchQuery, currentPage)
       .then((resultData: any) => {
         setBooks(resultData.books);
         setTotalBooks(resultData.total);
@@ -23,7 +27,7 @@ export const SearchBooksPage = () => {
         setHttpError(error.message);
       });
     setIsLoading(false);
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
 
   if (httpError) {
     return (
@@ -45,8 +49,15 @@ export const SearchBooksPage = () => {
                 type="search"
                 placeholder="Search"
                 aria-labelledby="Search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
               />
-              <button className="btn btn-outline-success">Search</button>
+              <button
+                className="btn btn-outline-success"
+                onClick={startSearch}
+              >
+                Search
+              </button>
             </div>
           </div>
         </div>
