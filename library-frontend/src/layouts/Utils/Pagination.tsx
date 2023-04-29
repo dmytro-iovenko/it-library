@@ -47,7 +47,7 @@ export const Pagination: React.FC<{
   setCurrentPage: any;
 }> = ({ currentPage, totalPages, setCurrentPage }) => {
   return (
-    <nav>
+    <nav className="mb-5">
       <ul className="pagination flex-wrap">
         <li className={currentPage > 1 ? "page-item" : "page-item disabled"}>
           <a

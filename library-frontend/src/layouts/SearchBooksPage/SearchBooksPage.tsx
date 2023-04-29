@@ -13,18 +13,24 @@ export const SearchBooksPage = () => {
   const [totalBooks, setTotalBooks] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [query, setQuery] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("1 0");
 
-  const startSearch = () =>
-    query.trim().length > 0 && setSearchQuery(query.trim());
+  const startSearch = () => {
+    if (query.trim().length > 0) {
+      setCurrentPage(1);
+      setSearchQuery(query.trim());
+    }
+  }
+    
 
   useEffect(() => {
     searchQuery.length > 0 &&
       BooksAPI.searchBooks(searchQuery, currentPage)
         .then((resultData: any) => {
           setBooks(resultData.books);
-          setTotalBooks(resultData.total);
-          setTotalPages(Math.ceil(resultData.total / 10));
+          const total = Math.min(resultData.total, 1000);
+          setTotalBooks(total);
+          setTotalPages(Math.ceil(total / 10));
         })
         .catch((error: any) => {
           setHttpError(error.message);
