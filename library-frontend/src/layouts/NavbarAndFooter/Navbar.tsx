@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export const Navbar = () => {
   return (
     <div className="main-color">
@@ -19,7 +21,10 @@ export const Navbar = () => {
             <div className="collapse navbar-collapse" id="navbarNavDropdown">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <a className="nav-link">Home</a>
+                  <NavLink className="nav-link" to="/home">Home</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/search">Search Books</NavLink>
                 </li>
               </ul>
               <ul className="navbar-nav ms-auto">

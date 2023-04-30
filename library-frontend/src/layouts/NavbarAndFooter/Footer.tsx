@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Footer = () => {
   const year = new Date().getFullYear();
 
@@ -10,14 +12,14 @@ export const Footer = () => {
         <p className="col-md-4 mb-0 text-white">© IT Library App, {year}</p>
         <ul className="nav navbar-dark col-md-4 justify-content-end">
           <li className="nav-item">
-            <a href="#" className="nav-link px-2 text-white">
+            <Link className="nav-link px-2 text-white" to="/home">
               Home
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link px-2 text-white">
+            <Link className="nav-link px-2 text-white" to="/search">
               Search Books
-            </a>
+            </Link>
           </li>
         </ul>
       </footer>
