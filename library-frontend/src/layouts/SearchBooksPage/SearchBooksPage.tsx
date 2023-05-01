@@ -31,9 +31,9 @@ export const SearchBooksPage = () => {
   }, [num, query]);
 
   const startSearch = () => {
-    if (searchInput.trim().length > 0) {
-      setCurrentPage(1);
-      setSearchQuery(searchInput.trim());
+    const query = searchInput.trim();
+    if (query.length > 0 && query !== searchQuery) {
+      navigate('/search/query/' + encodeURI(query));
     }
   };
 
