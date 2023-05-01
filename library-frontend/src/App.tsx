@@ -16,8 +16,11 @@ export const App = () => {
               path="index.html"
               element={<Navigate replace to="/home" />}
             />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="home" element={<HomePage />} />
             <Route path="search" element={<SearchBooksPage />} />
+            <Route path="search/page/:num" element={<SearchBooksPage />} />
+            <Route path="search/query/:query" element={<SearchBooksPage />} />
+            <Route path="search/query/:query/page/:num" element={<SearchBooksPage />} />
           </Routes>
         </div>
         <Footer />

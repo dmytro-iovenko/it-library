@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { BookModel } from "../../models/BookModel";
 import { Pagination } from "../Utils/Pagination";
 import { SearchBooksItem } from "./components/SearchBooksItem";
@@ -12,18 +13,32 @@ export const SearchBooksPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalBooks, setTotalBooks] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [query, setQuery] = useState("");
-  const [searchQuery, setSearchQuery] = useState("1 0");
-
-  const startSearch = () => {
-    if (query.trim().length > 0) {
-      setCurrentPage(1);
-      setSearchQuery(query.trim());
-    }
-  }
-    
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const { query, num } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    query && query.trim().length === 0 && navigate(`/search`);
+    query && Number(num) === 1 && navigate(`/search/query/${query}`);
+    if (query) {
+      setSearchQuery(query);
+      setSearchInput(query);
+    } else {
+      setSearchQuery(BooksAPI.defaultQuery);
+    }
+    num && setCurrentPage(Number(num));
+  }, [num, query]);
+
+  const startSearch = () => {
+    if (searchInput.trim().length > 0) {
+      setCurrentPage(1);
+      setSearchQuery(searchInput.trim());
+    }
+  };
+
+  useEffect(() => {
+    console.log(searchQuery, currentPage);
     searchQuery.length > 0 &&
       BooksAPI.searchBooks(searchQuery, currentPage)
         .then((resultData: any) => {
@@ -35,6 +50,7 @@ export const SearchBooksPage = () => {
         .catch((error: any) => {
           setHttpError(error.message);
         });
+    window.scrollTo(0, 0);
     setIsLoading(false);
   }, [currentPage, searchQuery]);
 
@@ -61,8 +77,8 @@ export const SearchBooksPage = () => {
                 type="search"
                 placeholder="Search"
                 aria-labelledby="Search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
               <button className="btn btn-outline-success" onClick={startSearch}>
                 Search
@@ -87,6 +103,7 @@ export const SearchBooksPage = () => {
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
+                  searchQuery={searchQuery}
                   setCurrentPage={setCurrentPage}
                 />
               )}

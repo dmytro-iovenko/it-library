@@ -1,6 +1,7 @@
 import axios from "axios";
 // Third party API
 const baseURL = 'https://api.itbook.store/1.0/';
+const defaultQuery = "0 0";
 
 function getAxios(endPoint: string) {
     return axios.get(baseURL + endPoint)
@@ -24,4 +25,4 @@ function getBookByISBN(isbn: string) {
     return getAxios(url);
 }
 
-export {searchBooks, getNewBooks, getBookByISBN};
+export {searchBooks, getNewBooks, getBookByISBN, defaultQuery};

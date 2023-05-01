@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import * as BooksAPI from "../../services/itbooks-api";
+
 // generating pagination dynamically based on the current page to get a fixed number of page items (9 items)
 function indexes(page: number, total: number) {
   let start, end;
@@ -44,19 +47,21 @@ function indexes(page: number, total: number) {
 export const Pagination: React.FC<{
   currentPage: number;
   totalPages: number;
+  searchQuery: string;
   setCurrentPage: any;
-}> = ({ currentPage, totalPages, setCurrentPage }) => {
+}> = ({ currentPage, totalPages, searchQuery, setCurrentPage }) => {
+  const baseURL =
+    searchQuery === BooksAPI.defaultQuery
+      ? `/search/page/`
+      : `/search/query/${encodeURI(searchQuery)}/page/`;
+
   return (
     <nav className="mb-5">
       <ul className="pagination flex-wrap">
         <li className={currentPage > 1 ? "page-item" : "page-item disabled"}>
-          <a
-            className="page-link"
-            href="#"
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
+          <Link to={baseURL + (currentPage - 1)} className="page-link">
             Previous
-          </a>
+          </Link>
         </li>
         {indexes(currentPage, totalPages).map((page, index) => {
           if (page === currentPage) {
@@ -74,13 +79,9 @@ export const Pagination: React.FC<{
           } else {
             return (
               <li className="page-item" key={index}>
-                <a
-                  className="page-link"
-                  href="#"
-                  onClick={() => setCurrentPage(page)}
-                >
+                <Link to={baseURL + page} className="page-link">
                   {page}
-                </a>
+                </Link>
               </li>
             );
           }
@@ -90,13 +91,9 @@ export const Pagination: React.FC<{
             currentPage < totalPages ? "page-item" : "page-item disabled"
           }
         >
-          <a
-            className="page-link"
-            href="#"
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
+          <Link to={baseURL + (currentPage + 1)} className="page-link">
             Next
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>
