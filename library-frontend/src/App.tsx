@@ -3,6 +3,7 @@ import { Navbar } from "./layouts/NavbarAndFooter/Navbar";
 import { HomePage } from "./layouts/HomePage/HomePage";
 import { Footer } from "./layouts/NavbarAndFooter/Footer";
 import { SearchBooksPage } from "./layouts/SearchBooksPage/SearchBooksPage";
+import { BookCheckoutPage } from "./layouts/BookCheckoutPage/BookCheckoutPage";
 
 export const App = () => {
   return (
@@ -21,6 +22,7 @@ export const App = () => {
             <Route path="search/page/:num" element={<SearchBooksPage />} />
             <Route path="search/query/:query" element={<SearchBooksPage />} />
             <Route path="search/query/:query/page/:num" element={<SearchBooksPage />} />
+            <Route path="checkout/book/:isbn" element={<BookCheckoutPage />} />
           </Routes>
         </div>
         <Footer />
