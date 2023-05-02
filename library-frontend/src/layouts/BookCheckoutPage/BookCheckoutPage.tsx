@@ -9,6 +9,7 @@ export const BookCheckoutPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
   const { isbn } = useParams();
+  const he = require("he");
 
   useEffect(() => {
     isbn &&
@@ -32,5 +33,48 @@ export const BookCheckoutPage = () => {
     );
   }
 
-  return <div></div>;
+  return (
+    <>
+      {book && (
+        <div>
+          <div className="container card book d-none d-lg-block">
+            <div className="row mt-5">
+              <div className="col-sm-2 col-md-2">
+                <img src={book.image} alt="Book" />
+              </div>
+              <div className="col-4 col-md-4 container">
+                <div className="ml-2 card-body">
+                  <h2 className="card-title">{book.title}</h2>
+                  <h5 className="mb-3 text-primary">{book.authors}</h5>
+                  <p className="m-0 text-muted">Released: {book.year}</p>
+                  <p className="m-0 text-muted">Publisher(s): {book?.publisher}</p>
+                  <p className="m-0 text-muted">Pages: {book.pages}</p>
+                  <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
+                  <p className="mt-3 lead">{he.decode(book.desc)}</p>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
+          <div className="container d-lg-none mt-5">
+            <div className="d-flex justify-content-center alighn-items-center">
+              <img src={book.image} alt="Book" />
+            </div>
+            <div className="mt-4">
+              <div className="ml-2">
+                <h2>{book.title}</h2>
+                <h5 className="mb-3 text-primary">{book.authors}</h5>
+                <p className="m-0 text-muted">Released: {book.year}</p>
+                <p className="m-0 text-muted">Publisher(s): {book.publisher}</p>
+                <p className="m-0 text-muted">Pages: {book.pages}</p>
+                <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
+                <p className="mt-3 lead">{he.decode(book.desc)}</p>
+              </div>
+            </div>
+            <hr />
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
