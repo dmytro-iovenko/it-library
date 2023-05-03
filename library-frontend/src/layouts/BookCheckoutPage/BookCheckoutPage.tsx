@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { BookModel } from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import * as BooksAPI from "../../services/itbooks-api";
+import { StarsReview } from "../Utils/StarsReview";
 
 export const BookCheckoutPage = () => {
   const [book, setBook] = useState<BookModel>();
@@ -51,6 +52,7 @@ export const BookCheckoutPage = () => {
                   <p className="m-0 text-muted">Pages: {book.pages}</p>
                   <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
                   <p className="mt-3 lead">{he.decode(book.desc)}</p>
+                  <StarsReview rating={4} size={32} />
                 </div>
               </div>
             </div>
@@ -69,6 +71,7 @@ export const BookCheckoutPage = () => {
                 <p className="m-0 text-muted">Pages: {book.pages}</p>
                 <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
                 <p className="mt-3 lead">{he.decode(book.desc)}</p>
+                <StarsReview rating={4} size={32} />
               </div>
             </div>
             <hr />
