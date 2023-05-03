@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BookModel } from "../../models/BookModel";
+import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
-import * as BooksAPI from "../../services/itbooks-api";
 import { StarsReview } from "../Utils/StarsReview";
+import * as BooksAPI from "../../services/itbooks-api";
 
 export const BookCheckoutPage = () => {
   const [book, setBook] = useState<BookModel>();
@@ -48,13 +49,16 @@ export const BookCheckoutPage = () => {
                   <h2 className="card-title">{book.title}</h2>
                   <h5 className="mb-3 text-primary">{book.authors}</h5>
                   <p className="m-0 text-muted">Released: {book.year}</p>
-                  <p className="m-0 text-muted">Publisher(s): {book?.publisher}</p>
+                  <p className="m-0 text-muted">
+                    Publisher(s): {book?.publisher}
+                  </p>
                   <p className="m-0 text-muted">Pages: {book.pages}</p>
                   <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
                   <p className="mt-3 lead">{he.decode(book.desc)}</p>
                   <StarsReview rating={4} size={32} />
                 </div>
               </div>
+              <CheckoutAndReviewBox book={book} mobile={false} />
             </div>
             <hr />
           </div>
@@ -74,6 +78,7 @@ export const BookCheckoutPage = () => {
                 <StarsReview rating={4} size={32} />
               </div>
             </div>
+            <CheckoutAndReviewBox book={book} mobile={true} />
             <hr />
           </div>
         </div>
