@@ -2,14 +2,19 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BookModel } from "../../models/BookModel";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
+import { ReviewModel } from "../../models/ReviewModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import * as BooksAPI from "../../services/itbooks-api";
+import * as ReviewsAPI from "../../services/reviews-api";
 
 export const BookCheckoutPage = () => {
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
+  const [reviews, setReviews] = useState<ReviewModel[]>([]);
+  const [totalStars, setTotalStars] = useState(0);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
   const { isbn } = useParams();
   const he = require("he");
 
@@ -23,7 +28,29 @@ export const BookCheckoutPage = () => {
     setIsLoading(false);
   }, [isbn]);
 
-  if (isLoading) {
+  useEffect(() => {
+    isbn &&
+      ReviewsAPI.getReviewsByISBN(isbn)
+        .then((resultData: any) => {
+          setReviews(resultData.reviews);
+          const ratingsArr: number[] = resultData.reviews.reduce(
+            (totalRating: number[], review: ReviewModel) => [
+              totalRating[0] + review.rating,
+              ++totalRating[1],
+            ]
+          );
+          const averageRating = (
+            Math.round((ratingsArr[0] / ratingsArr[1]) * 2) / 2
+          ).toFixed(1);
+          setTotalStars(Number(averageRating));
+          setIsLoadingReviews(false);
+        })
+        .catch((error: any) => {
+          setHttpError(error.message);
+        });
+  }, [isbn]);
+
+  if (isLoading || isLoadingReviews) {
     return <SpinnerLoading />;
   }
 
