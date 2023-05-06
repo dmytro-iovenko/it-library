@@ -3,7 +3,7 @@ import axios from "axios";
 const baseURL = "http://localhost:8080/api/reviews";
 
 function getAxios(endPoint?: string) {
-  return axios.get(baseURL + endPoint).then((response: any) => response.data);
+    return axios.get(baseURL + endPoint).then((response: any) => response.data);
 }
 
 // get all reviews list

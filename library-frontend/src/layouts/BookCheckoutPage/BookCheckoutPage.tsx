@@ -7,6 +7,7 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import * as BooksAPI from "../../services/itbooks-api";
 import * as ReviewsAPI from "../../services/reviews-api";
+import { LatestReviews } from "./LatestReviews";
 
 export const BookCheckoutPage = () => {
   const [book, setBook] = useState<BookModel>();
@@ -32,23 +33,24 @@ export const BookCheckoutPage = () => {
     isbn &&
       ReviewsAPI.getReviewsByISBN(isbn)
         .then((resultData: any) => {
-          setReviews(resultData.reviews);
-          const ratingsArr: number[] = resultData.reviews.reduce(
-            (totalRating: number[], review: ReviewModel) => [
-              totalRating[0] + review.rating,
-              ++totalRating[1],
-            ]
-          );
-          const averageRating = (
-            Math.round((ratingsArr[0] / ratingsArr[1]) * 2) / 2
-          ).toFixed(1);
-          setTotalStars(Number(averageRating));
-          setIsLoadingReviews(false);
+        if (resultData._embedded && resultData._embedded.reviews.length > 0) {
+            const allReviews = resultData._embedded.reviews;
+            setReviews(allReviews);
+            const totalReviews = allReviews.length;
+            let totalRating: number = allReviews
+              .map((review: ReviewModel) => review.rating)
+              .reduce((acc: number, rating: number) => acc + rating);
+            const averageRating = (
+              Math.round((totalRating / totalReviews) * 2) / 2
+            ).toFixed(1);
+            setTotalStars(Number(averageRating));
+          }
         })
         .catch((error: any) => {
           setHttpError(error.message);
         });
-  }, [isbn]);
+        setIsLoadingReviews(false);
+    }, [isbn]);
 
   if (isLoading || isLoadingReviews) {
     return <SpinnerLoading />;
@@ -68,7 +70,7 @@ export const BookCheckoutPage = () => {
         <div>
           <div className="container card book d-none d-lg-block">
             <div className="row mt-5">
-              <div className="col-sm-2 col-md-2">
+              <div className="col-sm-3 col-md-3">
                 <img src={book.image} alt="Book" />
               </div>
               <div className="col-4 col-md-4 container">
@@ -82,12 +84,17 @@ export const BookCheckoutPage = () => {
                   <p className="m-0 text-muted">Pages: {book.pages}</p>
                   <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
                   <p className="mt-3 lead">{he.decode(book.desc)}</p>
-                  <StarsReview rating={4} size={32} />
+                  <StarsReview rating={totalStars} size={32} />
                 </div>
               </div>
               <CheckoutAndReviewBox book={book} mobile={false} />
             </div>
             <hr />
+            <LatestReviews
+              reviews={reviews}
+              isbn={book.isbn13}
+              mobile={false}
+            />
           </div>
           <div className="container d-lg-none mt-5">
             <div className="d-flex justify-content-center alighn-items-center">
@@ -102,11 +109,12 @@ export const BookCheckoutPage = () => {
                 <p className="m-0 text-muted">Pages: {book.pages}</p>
                 <p className="m-0 text-muted">ISBN: {book.isbn13}</p>
                 <p className="mt-3 lead">{he.decode(book.desc)}</p>
-                <StarsReview rating={4} size={32} />
+                <StarsReview rating={totalStars} size={32} />
               </div>
             </div>
             <CheckoutAndReviewBox book={book} mobile={true} />
             <hr />
+            <LatestReviews reviews={reviews} isbn={book.isbn13} mobile={true} />
           </div>
         </div>
       )}
