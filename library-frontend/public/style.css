@@ -17,7 +17,8 @@ code {
 }
 
 .header {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("./images/header-bg.jpg");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("./images/header-bg.jpg");
   opacity: var(--mainOpacity);
   height: 25em !important;
 }
@@ -61,21 +62,9 @@ code {
   border: none;
 }
 
-.card-text {
-
-}
-.card-data {
-  margin: 0;
-}
-
-.card-desc {
-  margin-top: 2rem;
-}
-
-
 @media (min-width: 1200px) {
   .col-xl-5th {
-  flex: 0 0 auto;
-  width: 20%;
+    flex: 0 0 auto;
+    width: 20%;
   }
 }
