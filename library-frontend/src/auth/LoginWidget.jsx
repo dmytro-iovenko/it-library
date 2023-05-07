@@ -18,7 +18,7 @@ const LoginWidget = ({ config }) => {
 
   return (
     <>
-      {authState.isAuthenticated && (
+      {!authState.isAuthenticated && (
         <OktaSignInWidget
           config={config}
           onSuccess={onSuccess}
