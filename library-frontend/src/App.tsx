@@ -32,6 +32,8 @@ export const App: React.FC = () => {
             <Route path="search/query/:query" element={<SearchBooksPage />} />
             <Route path="search/query/:query/page/:num" element={<SearchBooksPage />} />
             <Route path="checkout/book/:isbn" element={<BookCheckoutPage />} />
+            <Route path="login" element={<LoginWidget config={oktaConfig.oidc} />} />
+            <Route path="login/callback" element={<LoginCallback loadingElement={<SpinnerLoading />} />} />
           </Routes>
         </div>
         <Footer />
