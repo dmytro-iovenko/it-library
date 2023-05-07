@@ -1,4 +1,5 @@
 import { useOktaAuth } from "@okta/okta-react";
+import { OktaSignInWidget } from "./OktaSignInWidget";
 import { SpinnerLoading } from "../layouts/Utils/SpinnerLoading";
 
 const LoginWidget = ({ config }) => {
