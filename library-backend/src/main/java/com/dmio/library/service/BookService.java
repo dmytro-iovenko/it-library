@@ -15,7 +15,7 @@ public class BookService {
     @Autowired
     private CheckoutRepository checkoutRepository;
 
-    public boolean checkoutBook(String userEmail, String isbn) throws Exception {
+    public Checkout checkoutBook(String userEmail, String isbn) throws Exception {
         Checkout validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
         if (validateCheckout != null) {
             throw new Exception("Book already checked out by user");
@@ -25,9 +25,7 @@ public class BookService {
                 isbn,
                 LocalDate.now().toString(),
                 LocalDate.now().plusDays(7).toString());
-
-        checkoutRepository.save(checkout);
-        return true;
+        return checkoutRepository.save(checkout);
     }
 
 }
