@@ -16,16 +16,19 @@ public class BookService {
     private CheckoutRepository checkoutRepository;
 
     public Checkout checkoutBook(String userEmail, String isbn) throws Exception {
-        Checkout validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
-        if (validateCheckout != null) {
+        var validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
+        if (!validateCheckout.isPresent())
             throw new Exception("Book already checked out by user");
-        }
         Checkout checkout = new Checkout(
                 userEmail,
                 isbn,
                 LocalDate.now().toString(),
                 LocalDate.now().plusDays(7).toString());
         return checkoutRepository.save(checkout);
+    }
+
+    public Boolean checkoutBookByUser(String userEmail, String isbn) {
+        return (checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn).isPresent());
     }
 
 }
