@@ -17,7 +17,7 @@ public class BookService {
 
     public Checkout checkoutBook(String userEmail, String isbn) throws Exception {
         var validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
-        if (!validateCheckout.isPresent())
+        if (validateCheckout != null)
             throw new Exception("Book already checked out by user");
         Checkout checkout = new Checkout(
                 userEmail,
@@ -28,7 +28,12 @@ public class BookService {
     }
 
     public Boolean checkoutBookByUser(String userEmail, String isbn) {
-        return (checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn).isPresent());
+        var validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
+        return (validateCheckout != null);
+    }
+
+    public int currentLoansCount(String userEmail) {
+        return checkoutRepository.findBooksByUserEmail(userEmail).size();
     }
 
 }

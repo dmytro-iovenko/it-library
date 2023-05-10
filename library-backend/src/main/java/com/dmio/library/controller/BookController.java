@@ -32,4 +32,10 @@ public class BookController {
         return new ResponseEntity<>(bookService.checkoutBookByUser(userEmail, isbn), HttpStatus.OK);
     }
 
+    @GetMapping("/currentLoans/count")
+    public ResponseEntity<Integer> currentLoansCount() {
+        String userEmail = "test.user@email.com";
+        return new ResponseEntity<>(bookService.currentLoansCount(userEmail), HttpStatus.OK);
+    }
+
 }
