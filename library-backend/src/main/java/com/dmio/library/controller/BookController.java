@@ -20,19 +20,19 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @PutMapping("/checkout")
+    @PutMapping("/secure/checkout")
     public ResponseEntity<Checkout> checkoutBook(@RequestParam String isbn) throws Exception {
         String userEmail = "test.user@email.com";
         return new ResponseEntity<>(bookService.checkoutBook(userEmail, isbn), HttpStatus.OK);
     }
 
-    @GetMapping("/isCheckedOutByUser")
+    @GetMapping("/secure/isCheckedOutByUser")
     public ResponseEntity<Boolean> checkoutBookByUser(@RequestParam String isbn) {
         String userEmail = "test.user@email.com";
         return new ResponseEntity<>(bookService.checkoutBookByUser(userEmail, isbn), HttpStatus.OK);
     }
 
-    @GetMapping("/currentLoans/count")
+    @GetMapping("/secure/currentLoans/count")
     public ResponseEntity<Integer> currentLoansCount() {
         String userEmail = "test.user@email.com";
         return new ResponseEntity<>(bookService.currentLoansCount(userEmail), HttpStatus.OK);
