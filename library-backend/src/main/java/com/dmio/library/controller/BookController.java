@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dmio.library.entity.Checkout;
 import com.dmio.library.service.BookService;
+import com.dmio.library.utils.ExtractJWT;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -21,20 +23,22 @@ public class BookController {
     private BookService bookService;
 
     @PutMapping("/secure/checkout")
-    public ResponseEntity<Checkout> checkoutBook(@RequestParam String isbn) throws Exception {
-        String userEmail = "test.user@email.com";
+    public ResponseEntity<Checkout> checkoutBook(@RequestHeader(value = "Authorization") String token,
+            @RequestParam String isbn) throws Exception {
+        String userEmail = ExtractJWT.jwtExtraction(token, "sub");
         return new ResponseEntity<>(bookService.checkoutBook(userEmail, isbn), HttpStatus.OK);
     }
 
     @GetMapping("/secure/isCheckedOutByUser")
-    public ResponseEntity<Boolean> checkoutBookByUser(@RequestParam String isbn) {
-        String userEmail = "test.user@email.com";
+    public ResponseEntity<Boolean> checkoutBookByUser(@RequestHeader(value = "Authorization") String token,
+            @RequestParam String isbn) {
+        String userEmail = ExtractJWT.jwtExtraction(token, "sub");
         return new ResponseEntity<>(bookService.checkoutBookByUser(userEmail, isbn), HttpStatus.OK);
     }
 
     @GetMapping("/secure/currentLoans/count")
-    public ResponseEntity<Integer> currentLoansCount() {
-        String userEmail = "test.user@email.com";
+    public ResponseEntity<Integer> currentLoansCount(@RequestHeader(value = "Authorization") String token) {
+        String userEmail = ExtractJWT.jwtExtraction(token, "sub");
         return new ResponseEntity<>(bookService.currentLoansCount(userEmail), HttpStatus.OK);
     }
 
