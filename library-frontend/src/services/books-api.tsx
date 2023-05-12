@@ -8,10 +8,14 @@ function getAxios(endPoint?: string, config?: any) {
     .then((response: any) => response.data);
 }
 
-// get reviews by ISBN
 function getUserCurrentLoansCount(config: any) {
   const url = "/secure/currentLoans/count";
   return getAxios(url, config);
 }
 
-export { getUserCurrentLoansCount };
+function getIsCheckedOutByUser(isbn: string, config: any) {
+  const url = "/secure/isCheckedOutByUser?isbn=" + isbn;
+  return getAxios(url, config);
+}
+
+export { getUserCurrentLoansCount, getIsCheckedOutByUser };

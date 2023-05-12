@@ -27,8 +27,11 @@ export const BookCheckoutPage = () => {
 
   // Loans Count State
   const [currentLoansCount, setCurrentLoansCount] = useState(0);
-  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] =
-    useState(true);
+  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
+
+  // Is Book Check Out?
+  const [isCheckedOut, setIsCheckedOut] = useState(false);
+  const [isLoadingBookCheckedOut, setIsLoadingBookCheckedOut] = useState(true);
 
   useEffect(() => {
     isbn &&
@@ -80,6 +83,24 @@ export const BookCheckoutPage = () => {
     }
     setIsLoadingCurrentLoansCount(false);
   }, [authState]);
+
+  useEffect(() => {
+    if (isbn && authState && authState.isAuthenticated) {
+      const config = {
+        headers: {
+          Authorization: "Bearer " + authState.accessToken?.accessToken,
+          "Content-Type": "application/json",
+        },
+      };
+
+      BooksAPI.getIsCheckedOutByUser(isbn, config)
+        .then((resultData: any) => setIsCheckedOut(resultData))
+        .catch((error: any) => {
+          setHttpError(error.message);
+        });
+    }
+    setIsLoadingBookCheckedOut(false);
+  }, [isbn, authState]);
 
   if (isLoading || isLoadingReviews || isLoadingCurrentLoansCount) {
     return <SpinnerLoading />;
