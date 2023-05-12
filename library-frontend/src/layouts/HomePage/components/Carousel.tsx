@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BookItem } from "./BookItem";
 import { BookModel } from "../../../models/BookModel";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
-import * as BooksAPI from "../../../services/itbooks-api";
+import * as ITBooksAPI from "../../../services/itbooks-api";
 
 interface Response {
   title: string;
@@ -19,7 +19,7 @@ export const Carousel = () => {
   const [httpError, setHttpError] = useState(null);
 
   useEffect(() => {
-    BooksAPI.getNewBooks()
+    ITBooksAPI.getNewBooks()
       .then((resultData: any) => resultData.books)
       .then((books: any) => {
         setBooks(books.sort(() => 0.5 - Math.random()).slice(0, 9));

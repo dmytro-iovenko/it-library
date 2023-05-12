@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import * as BooksAPI from "../../services/itbooks-api";
+import * as ITBooksAPI from "../../services/itbooks-api";
 
 // generating pagination dynamically based on the current page to get a fixed number of page items (9 items)
 function indexes(page: number, total: number) {
@@ -51,7 +51,7 @@ export const Pagination: React.FC<{
   setCurrentPage: any;
 }> = ({ currentPage, totalPages, searchQuery, setCurrentPage }) => {
   const baseURL =
-    searchQuery === BooksAPI.defaultQuery
+    searchQuery === ITBooksAPI.defaultQuery
       ? `/search/page/`
       : `/search/query/${encodeURI(searchQuery)}/page/`;
 

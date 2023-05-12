@@ -2,26 +2,37 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BookModel } from "../../models/BookModel";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
+import { LatestReviews } from "./LatestReviews";
 import { ReviewModel } from "../../models/ReviewModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
-import * as BooksAPI from "../../services/itbooks-api";
+import { useOktaAuth } from "@okta/okta-react";
+import * as ITBooksAPI from "../../services/itbooks-api";
+import * as BooksAPI from "../../services/books-api";
 import * as ReviewsAPI from "../../services/reviews-api";
-import { LatestReviews } from "./LatestReviews";
 
 export const BookCheckoutPage = () => {
-  const [book, setBook] = useState<BookModel>();
-  const [isLoading, setIsLoading] = useState(true);
-  const [httpError, setHttpError] = useState(null);
-  const [reviews, setReviews] = useState<ReviewModel[]>([]);
-  const [totalStars, setTotalStars] = useState(0);
-  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+  const { authState } = useOktaAuth();
   const { isbn } = useParams();
   const he = require("he");
 
+  const [book, setBook] = useState<BookModel>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState(null);
+
+  // Review State
+  const [reviews, setReviews] = useState<ReviewModel[]>([]);
+  const [totalStars, setTotalStars] = useState(0);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+
+  // Loans Count State
+  const [currentLoansCount, setCurrentLoansCount] = useState(0);
+  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] =
+    useState(true);
+
   useEffect(() => {
     isbn &&
-      BooksAPI.getBookByISBN(isbn)
+      ITBooksAPI.getBookByISBN(isbn)
         .then((resultData: any) => setBook(resultData))
         .catch((error: any) => {
           setHttpError(error.message);
@@ -33,7 +44,7 @@ export const BookCheckoutPage = () => {
     isbn &&
       ReviewsAPI.getReviewsByISBN(isbn)
         .then((resultData: any) => {
-        if (resultData._embedded && resultData._embedded.reviews.length > 0) {
+          if (resultData._embedded && resultData._embedded.reviews.length > 0) {
             const allReviews = resultData._embedded.reviews;
             setReviews(allReviews);
             const totalReviews = allReviews.length;
@@ -49,10 +60,28 @@ export const BookCheckoutPage = () => {
         .catch((error: any) => {
           setHttpError(error.message);
         });
-        setIsLoadingReviews(false);
-    }, [isbn]);
+    setIsLoadingReviews(false);
+  }, [isbn]);
 
-  if (isLoading || isLoadingReviews) {
+  useEffect(() => {
+    if (authState && authState.isAuthenticated) {
+      const config = {
+        headers: {
+          Authorization: "Bearer " + authState.accessToken?.accessToken,
+          "Content-Type": "application/json",
+        },
+      };
+
+      BooksAPI.getUserCurrentLoansCount(config)
+        .then((resultData: any) => setCurrentLoansCount(resultData))
+        .catch((error: any) => {
+          setHttpError(error.message);
+        });
+    }
+    setIsLoadingCurrentLoansCount(false);
+  }, [authState]);
+
+  if (isLoading || isLoadingReviews || isLoadingCurrentLoansCount) {
     return <SpinnerLoading />;
   }
 
@@ -87,7 +116,11 @@ export const BookCheckoutPage = () => {
                   <StarsReview rating={totalStars} size={32} />
                 </div>
               </div>
-              <CheckoutAndReviewBox book={book} mobile={false} />
+              <CheckoutAndReviewBox
+                book={book}
+                mobile={false}
+                currentLoansCount={currentLoansCount}
+              />
             </div>
             <hr />
             <LatestReviews
@@ -112,7 +145,11 @@ export const BookCheckoutPage = () => {
                 <StarsReview rating={totalStars} size={32} />
               </div>
             </div>
-            <CheckoutAndReviewBox book={book} mobile={true} />
+            <CheckoutAndReviewBox
+              book={book}
+              mobile={true}
+              currentLoansCount={currentLoansCount}
+            />
             <hr />
             <LatestReviews reviews={reviews} isbn={book.isbn13} mobile={true} />
           </div>

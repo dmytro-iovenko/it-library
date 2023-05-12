@@ -4,7 +4,8 @@ import { BookModel } from "../../models/BookModel";
 export const CheckoutAndReviewBox: React.FC<{
   book: BookModel | undefined;
   mobile: boolean;
-}> = ({ book, mobile }) => {
+  currentLoansCount: number;
+}> = ({ book, mobile, currentLoansCount }) => {
   return (
     <div
       className={
@@ -14,7 +15,7 @@ export const CheckoutAndReviewBox: React.FC<{
       <div className="card-body container">
         <div className="mt-3">
           <p>
-            <b>0/5 </b>
+            <b>{currentLoansCount}/5 </b>
             books checked out
           </p>
           <hr />
@@ -34,7 +35,9 @@ export const CheckoutAndReviewBox: React.FC<{
             </p>
           </div>
         </div>
-        <Link to="/#" className="btn btn-success btn-lg">Sign In</Link>
+        <Link to="/#" className="btn btn-success btn-lg">
+          Sign In
+        </Link>
         <hr />
         <p className="mt-3">
           This number can change until placing order has been complete.

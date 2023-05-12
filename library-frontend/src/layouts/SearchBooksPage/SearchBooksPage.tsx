@@ -4,7 +4,7 @@ import { BookModel } from "../../models/BookModel";
 import { Pagination } from "../Utils/Pagination";
 import { SearchBooksItem } from "./components/SearchBooksItem";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
-import * as BooksAPI from "../../services/itbooks-api";
+import * as ITBooksAPI from "../../services/itbooks-api";
 
 export const SearchBooksPage = () => {
   const [books, setBooks] = useState<BookModel[]>([]);
@@ -25,7 +25,7 @@ export const SearchBooksPage = () => {
       setSearchQuery(query);
       setSearchInput(query);
     } else {
-      setSearchQuery(BooksAPI.defaultQuery);
+      setSearchQuery(ITBooksAPI.defaultQuery);
     }
     num && setCurrentPage(Number(num));
   }, [num, query]);
@@ -40,7 +40,7 @@ export const SearchBooksPage = () => {
   useEffect(() => {
     console.log(searchQuery, currentPage);
     searchQuery.length > 0 &&
-      BooksAPI.searchBooks(searchQuery, currentPage)
+      ITBooksAPI.searchBooks(searchQuery, currentPage)
         .then((resultData: any) => {
           setBooks(resultData.books);
           const total = Math.min(resultData.total, 1000);
