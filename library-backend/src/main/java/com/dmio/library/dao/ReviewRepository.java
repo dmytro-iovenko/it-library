@@ -9,4 +9,5 @@ import com.dmio.library.entity.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findByIsbn(@RequestParam("isbn") String isbn, Pageable pageable);
+    Review findByUserEmailAndIsbn(String userEmail, String isbn);
 }
