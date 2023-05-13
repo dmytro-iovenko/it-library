@@ -27,7 +27,8 @@ export const BookCheckoutPage = () => {
 
   // Loans Count State
   const [currentLoansCount, setCurrentLoansCount] = useState(0);
-  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
+  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] =
+    useState(true);
 
   // Is Book Check Out?
   const [isCheckedOut, setIsCheckedOut] = useState(false);
@@ -141,6 +142,8 @@ export const BookCheckoutPage = () => {
                 book={book}
                 mobile={false}
                 currentLoansCount={currentLoansCount}
+                isAuthenticated={authState?.isAuthenticated}
+                isCheckedOut={isCheckedOut}
               />
             </div>
             <hr />
@@ -170,6 +173,8 @@ export const BookCheckoutPage = () => {
               book={book}
               mobile={true}
               currentLoansCount={currentLoansCount}
+              isAuthenticated={authState?.isAuthenticated}
+              isCheckedOut={isCheckedOut}
             />
             <hr />
             <LatestReviews reviews={reviews} isbn={book.isbn13} mobile={true} />
