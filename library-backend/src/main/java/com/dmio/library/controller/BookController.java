@@ -15,7 +15,7 @@ import com.dmio.library.entity.Checkout;
 import com.dmio.library.service.BookService;
 import com.dmio.library.utils.ExtractJWT;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins="http://localhost:3000")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {

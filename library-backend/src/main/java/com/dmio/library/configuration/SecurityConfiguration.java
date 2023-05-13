@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 
 @Configuration
 @AllArgsConstructor
-//@EnableMethodSecurity
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,6 +29,8 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer(server -> server.jwt());
         // Add CORS filters
         http.cors(Customizer.withDefaults());
+        // http.cors();
+
         // Add content negotiation strategy
         http.setSharedObject(ContentNegotiationStrategy.class,
                 new HeaderContentNegotiationStrategy());
