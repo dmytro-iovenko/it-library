@@ -11,7 +11,6 @@ export const Navbar = () => {
 
   const handleLogout = () => oktaAuth.signOut();
 
-  console.log(authState);
   return (
     <div className="main-color">
       <header className="container p-0">
