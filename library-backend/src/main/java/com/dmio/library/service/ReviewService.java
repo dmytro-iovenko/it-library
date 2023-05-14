@@ -18,7 +18,7 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public void postReview(String userEmail, ReviewRequest reviewRequest) throws Exception {
+    public Review postReview(String userEmail, ReviewRequest reviewRequest) throws Exception {
         Review validateReview = reviewRepository.findByUserEmailAndIsbn(userEmail, reviewRequest.getIsbn());
         if (validateReview != null) {
             throw new Exception("Review already created");
@@ -32,7 +32,7 @@ public class ReviewService {
                     Object::toString).orElse(null));
         }
         review.setDate(Date.valueOf(LocalDate.now()));
-        reviewRepository.save(review);
+        return reviewRepository.save(review);
     }
 
 }
