@@ -35,4 +35,9 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+    public Boolean userReviewListed(String userEmail, String isbn) {
+        Review validateReview = reviewRepository.findByUserEmailAndIsbn(userEmail, isbn);
+        return (validateReview != null);
+    }
+
 }
