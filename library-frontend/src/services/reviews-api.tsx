@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 const baseURL = "http://localhost:8080/api/reviews";
 
-function getAxios(endPoint?: string) {
-    return axios.get(baseURL + endPoint).then((response: any) => response.data);
+function getAxios(endPoint?: string, config?: AxiosRequestConfig<string>) {
+    return axios.get(baseURL + endPoint, config).then((response: any) => response.data);
 }
 
 // get all reviews list
@@ -16,4 +16,10 @@ function getReviewsByISBN(isbn: string) {
   return getAxios(url);
 }
 
-export { getAllReviews, getReviewsByISBN };
+function getIsReviewedByUser(isbn: string, config: any) {
+  const url = "/secure/isReviewedByUser?isbn=" + isbn;
+  return getAxios(url, config);
+}
+
+
+export { getAllReviews, getReviewsByISBN, getIsReviewedByUser };

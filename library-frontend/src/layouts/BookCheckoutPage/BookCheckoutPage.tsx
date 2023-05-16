@@ -25,10 +25,12 @@ export const BookCheckoutPage = () => {
   const [totalStars, setTotalStars] = useState(0);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
 
+  const [isReviewed, setIsReviewed] = useState(false);
+  const [isLoadingUserReview, setIsLoadingUserReview] = useState(true);
+
   // Loans Count State
   const [currentLoansCount, setCurrentLoansCount] = useState(0);
-  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] =
-    useState(true);
+  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
 
   // Is Book Check Out?
   const [isCheckedOut, setIsCheckedOut] = useState(false);
@@ -65,7 +67,25 @@ export const BookCheckoutPage = () => {
           setHttpError(error.message);
         });
     setIsLoadingReviews(false);
-  }, [isbn, isCheckedOut]);
+  }, [isbn, isReviewed]);
+
+  useEffect(() => {
+    if (isbn && authState && authState.isAuthenticated) {
+      const config = {
+        headers: {
+          Authorization: "Bearer " + authState.accessToken?.accessToken,
+          "Content-Type": "application/json",
+        },
+      };
+
+      ReviewsAPI.getIsReviewedByUser(isbn, config)
+        .then((resultData: any) => setIsReviewed(resultData))
+        .catch((error: any) => {
+          setHttpError(error.message);
+        });
+    }
+    setIsLoadingUserReview(false);
+  }, [isbn, authState]);
 
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
@@ -103,7 +123,13 @@ export const BookCheckoutPage = () => {
     setIsLoadingBookCheckedOut(false);
   }, [isbn, authState]);
 
-  if (isLoading || isLoadingReviews || isLoadingCurrentLoansCount) {
+  if (
+    isLoading ||
+    isLoadingReviews ||
+    isLoadingCurrentLoansCount ||
+    isLoadingBookCheckedOut ||
+    isLoadingUserReview
+  ) {
     return <SpinnerLoading />;
   }
 
@@ -115,40 +141,40 @@ export const BookCheckoutPage = () => {
     );
   }
 
-//   const checkoutBook = () => {
-//     if (authState && isbn) {
-//       const config = {
-//         headers: {
-//           Authorization: "Bearer " + authState.accessToken?.accessToken,
-//           "Content-Type": "application/json",
-//         },
-//       };
+  //   const checkoutBook = () => {
+  //     if (authState && isbn) {
+  //       const config = {
+  //         headers: {
+  //           Authorization: "Bearer " + authState.accessToken?.accessToken,
+  //           "Content-Type": "application/json",
+  //         },
+  //       };
 
-//       BooksAPI.checkoutBook(isbn, "", config)
-//         .then((resultData: any) => setIsCheckedOut(resultData))
-//         .catch((error: any) => {
-//           setHttpError(error.message);
-//         });
-//     }
+  //       BooksAPI.checkoutBook(isbn, "", config)
+  //         .then((resultData: any) => setIsCheckedOut(resultData))
+  //         .catch((error: any) => {
+  //           setHttpError(error.message);
+  //         });
+  //     }
 
-//     setIsCheckedOut(true);
-//   };
+  //     setIsCheckedOut(true);
+  //   };
 
-async function checkoutBook() {
+  async function checkoutBook() {
     const url = `http://localhost:8080/api/books/secure/checkout/?isbn=${book?.isbn13}`;
     const requestOptions = {
-        method: 'PUT',
-        headers: {
-            Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-            'Content-Type': 'application/json'
-        }
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+        "Content-Type": "application/json",
+      },
     };
     const checkoutResponse = await fetch(url, requestOptions);
     if (!checkoutResponse.ok) {
-        throw new Error('Something went wrong!');
+      throw new Error("Something went wrong!");
     }
     setIsCheckedOut(true);
-}
+  }
 
   return (
     <>
@@ -180,6 +206,7 @@ async function checkoutBook() {
                 isAuthenticated={authState?.isAuthenticated}
                 isCheckedOut={isCheckedOut}
                 checkoutBook={checkoutBook}
+                isReviewed={isReviewed}
               />
             </div>
             <hr />
@@ -212,6 +239,7 @@ async function checkoutBook() {
               isAuthenticated={authState?.isAuthenticated}
               isCheckedOut={isCheckedOut}
               checkoutBook={checkoutBook}
+              isReviewed={isReviewed}
             />
             <hr />
             <LatestReviews reviews={reviews} isbn={book.isbn13} mobile={true} />

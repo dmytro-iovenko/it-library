@@ -8,6 +8,7 @@ export const CheckoutAndReviewBox: React.FC<{
   isAuthenticated: any;
   isCheckedOut: boolean;
   checkoutBook: any;
+  isReviewed: boolean;
 }> = ({
   book,
   mobile,
@@ -15,6 +16,7 @@ export const CheckoutAndReviewBox: React.FC<{
   isAuthenticated,
   isCheckedOut,
   checkoutBook,
+  isReviewed,
 }) => {
   const buttonRender = () => {
     if (isAuthenticated) {
@@ -39,6 +41,19 @@ export const CheckoutAndReviewBox: React.FC<{
         Sign in
       </Link>
     );
+    };
+
+  const reviewRender = () => {
+    if (isAuthenticated && !isReviewed) {
+      return <p>Leave review here!</p>;
+    } else if (isAuthenticated && isReviewed) {
+      return (
+        <p>
+          <b>Thank you for your review!</b>
+        </p>
+      );
+    }
+    return <p>Sign in to be able to leave review.</p>;
   };
 
   return (
@@ -53,7 +68,7 @@ export const CheckoutAndReviewBox: React.FC<{
             <b>{currentLoansCount}/5 </b>
             books checked out
           </p>
-          <hr />
+          {/* <hr />
           {book ? (
             <h4 className="text-success">Available</h4>
           ) : (
@@ -68,14 +83,14 @@ export const CheckoutAndReviewBox: React.FC<{
               <b>1</b>
               available
             </p>
-          </div>
+          </div> */}
         </div>
         {buttonRender()}
         <hr />
-        <p className="mt-3">
+        {/* <p className="mt-3">
           This number can change until placing order has been complete.
-        </p>
-        <p>Sign in to be able to leave review.</p>
+        </p> */}
+        {reviewRender()}
       </div>
     </div>
   );
