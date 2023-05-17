@@ -104,7 +104,6 @@ export const SearchBooksPage = () => {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   searchQuery={searchQuery}
-                  setCurrentPage={setCurrentPage}
                 />
               )}
             </div>

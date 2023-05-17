@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { StarsReview } from "../Utils/StarsReview";
 
-export const LeaveReviewForm: React.FC<{}> = (props) => {
+export const LeaveReviewForm: React.FC<{ submitReview: any }> = ({
+  submitReview,
+}) => {
   const [starInput, setStarInput] = useState(0);
   const [displayInput, setDisplayInput] = useState(false);
   const [reviewDescription, setReviewDescription] = useState("");
@@ -49,7 +51,11 @@ export const LeaveReviewForm: React.FC<{}> = (props) => {
             ></textarea>
           </div>
           <div>
-            <button type="button" className="btn btn-primary mt-3">
+            <button
+              type="button"
+              className="btn btn-primary mt-3"
+              onClick={() => submitReview(starInput, reviewDescription)}
+            >
               Submit Review
             </button>
           </div>

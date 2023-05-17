@@ -48,8 +48,7 @@ export const Pagination: React.FC<{
   currentPage: number;
   totalPages: number;
   searchQuery: string;
-  setCurrentPage: any;
-}> = ({ currentPage, totalPages, searchQuery, setCurrentPage }) => {
+}> = ({ currentPage, totalPages, searchQuery }) => {
   const baseURL =
     searchQuery === ITBooksAPI.defaultQuery
       ? `/search/page/`

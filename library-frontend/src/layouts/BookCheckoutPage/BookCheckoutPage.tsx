@@ -4,6 +4,7 @@ import { BookModel } from "../../models/BookModel";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 import { LatestReviews } from "./LatestReviews";
 import { ReviewModel } from "../../models/ReviewModel";
+import { ReviewRequestModel } from "../../models/ReviewRequestModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { useOktaAuth } from "@okta/okta-react";
@@ -30,7 +31,8 @@ export const BookCheckoutPage = () => {
 
   // Loans Count State
   const [currentLoansCount, setCurrentLoansCount] = useState(0);
-  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
+  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] =
+    useState(true);
 
   // Is Book Check Out?
   const [isCheckedOut, setIsCheckedOut] = useState(false);
@@ -160,7 +162,7 @@ export const BookCheckoutPage = () => {
   //     setIsCheckedOut(true);
   //   };
 
-  async function checkoutBook() {
+  const checkoutBook = async () => {
     const url = `http://localhost:8080/api/books/secure/checkout/?isbn=${book?.isbn13}`;
     const requestOptions = {
       method: "PUT",
@@ -174,7 +176,31 @@ export const BookCheckoutPage = () => {
       throw new Error("Something went wrong!");
     }
     setIsCheckedOut(true);
-  }
+  };
+
+  const submitReview = async (starInput: number, reviewDescription: string) => {
+    if (isbn) {
+      const reviewRequestModel = new ReviewRequestModel(
+        isbn,
+        starInput,
+        reviewDescription
+      );
+      const url = `http://localhost:8080/api/reviews/secure/postReview`;
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewRequestModel),
+      };
+      const returnResponse = await fetch(url, requestOptions);
+      if (!returnResponse.ok) {
+        throw new Error("Something went wrong!");
+      }
+      setIsReviewed(true);
+    }
+  };
 
   return (
     <>
@@ -207,6 +233,7 @@ export const BookCheckoutPage = () => {
                 isCheckedOut={isCheckedOut}
                 checkoutBook={checkoutBook}
                 isReviewed={isReviewed}
+                submitReview={submitReview}
               />
             </div>
             <hr />
@@ -240,6 +267,7 @@ export const BookCheckoutPage = () => {
               isCheckedOut={isCheckedOut}
               checkoutBook={checkoutBook}
               isReviewed={isReviewed}
+              submitReview={submitReview}
             />
             <hr />
             <LatestReviews reviews={reviews} isbn={book.isbn13} mobile={true} />

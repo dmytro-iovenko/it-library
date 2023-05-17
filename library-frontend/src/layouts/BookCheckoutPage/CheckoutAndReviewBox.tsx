@@ -10,6 +10,7 @@ export const CheckoutAndReviewBox: React.FC<{
   isCheckedOut: boolean;
   checkoutBook: any;
   isReviewed: boolean;
+  submitReview: any;
 }> = ({
   book,
   mobile,
@@ -18,6 +19,7 @@ export const CheckoutAndReviewBox: React.FC<{
   isCheckedOut,
   checkoutBook,
   isReviewed,
+  submitReview,
 }) => {
   const buttonRender = () => {
     if (isAuthenticated) {
@@ -42,11 +44,11 @@ export const CheckoutAndReviewBox: React.FC<{
         Sign in
       </Link>
     );
-    };
+  };
 
   const reviewRender = () => {
     if (isAuthenticated && !isReviewed) {
-      return <LeaveReviewForm />;
+      return <LeaveReviewForm submitReview={submitReview} />;
     } else if (isAuthenticated && isReviewed) {
       return (
         <p>
