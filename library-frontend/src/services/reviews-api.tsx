@@ -11,8 +11,8 @@ function getAllReviews() {
   return getAxios();
 }
 // get reviews by ISBN
-function getReviewsByISBN(isbn: string) {
-  const url = "/search/findByIsbn?isbn=" + isbn;
+function getReviewsByISBN(isbn: string, page?:string, size?:string) {
+  const url = "/search/findByIsbn?isbn=" + isbn + (page && "&page=" + page) + (size && "&size=" + size);
   return getAxios(url);
 }
 
