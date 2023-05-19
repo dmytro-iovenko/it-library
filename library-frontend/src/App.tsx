@@ -2,8 +2,9 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Navbar } from "./layouts/NavbarAndFooter/Navbar";
 import { HomePage } from "./layouts/HomePage/HomePage";
 import { Footer } from "./layouts/NavbarAndFooter/Footer";
-import { SearchBooksPage } from "./layouts/SearchBooksPage/SearchBooksPage";
 import { BookCheckoutPage } from "./layouts/BookCheckoutPage/BookCheckoutPage";
+import { SearchBooksPage } from "./layouts/SearchBooksPage/SearchBooksPage";
+import { ReviewListPage } from "./layouts/Utils/ReviewListPage";
 import { SpinnerLoading } from "./layouts/Utils/SpinnerLoading";
 import { Security, LoginCallback } from "@okta/okta-react";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
@@ -31,6 +32,8 @@ export const App: React.FC = () => {
             <Route path="search/page/:num" element={<SearchBooksPage />} />
             <Route path="search/query/:query" element={<SearchBooksPage />} />
             <Route path="search/query/:query/page/:num" element={<SearchBooksPage />} />
+            <Route path="reviewlist/book/:isbn" element={<ReviewListPage />} />
+            <Route path="reviewlist/book/:isbn/page/:num" element={<ReviewListPage />} />
             <Route path="checkout/book/:isbn" element={<BookCheckoutPage />} />
             <Route path="login" element={<LoginWidget config={oktaConfig.oidc} />} />
             <Route path="login/callback" element={<LoginCallback loadingElement={<SpinnerLoading />} />} />

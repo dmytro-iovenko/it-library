@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReviewModel } from "../../models/ReviewModel";
 import { Review } from "./Review";
 import { Pagination } from "./Pagination";
@@ -13,25 +13,29 @@ export const ReviewListPage = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [reviewsPerPage] = useState(5);
+  const [reviewsPerPage] = useState(1);
   const [totalReviews, setTotalReviews] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const { isbn, page } = useParams();
+  const { isbn, num } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    page && setCurrentPage(Number(page));
-  }, [page]);
+    isbn && Number(num) === 1 && navigate(`/reviewlist/book/${isbn}`);
+
+    num && setCurrentPage(Number(num));
+  }, [isbn, num, navigate]);
 
   useEffect(() => {
     isbn &&
-      ReviewsAPI.getReviewsByISBN(isbn, page, reviewsPerPage)
+      ReviewsAPI.getReviewsByISBN(isbn, currentPage - 1, reviewsPerPage)
         .then((resultData: any) => {
-          if (
+        if (
             resultData._embedded &&
             resultData._embedded.reviews.length > 0 &&
             resultData.page
           ) {
+            console.log(resultData)
             setReviews(resultData._embedded.reviews);
             setTotalReviews(resultData.page.totalElements);
             setTotalPages(resultData.page.totalPages);
@@ -41,7 +45,7 @@ export const ReviewListPage = () => {
           setHttpError(error.message);
         });
     setIsLoading(false);
-  }, []);
+  }, [isbn, currentPage, reviewsPerPage]);
 
   if (isLoading) {
     return <SpinnerLoading />;
@@ -75,7 +79,7 @@ export const ReviewListPage = () => {
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          baseURI={`reviewlist/${isbn}`}
+          baseURI={`reviewlist/book/${isbn}`}
         />
       )}
     </div>

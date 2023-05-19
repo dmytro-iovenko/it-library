@@ -23,7 +23,7 @@ export const LatestReviews: React.FC<{
               <Link
                 type="button"
                 className="btn btn-outline-secondary main-color btn-md text-white"
-                to="/#"
+                to={`/reviewlist/book/${isbn}`}
               >
                 Reach all reviews
               </Link>

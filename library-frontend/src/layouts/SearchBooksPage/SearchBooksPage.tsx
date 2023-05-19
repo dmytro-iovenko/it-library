@@ -28,7 +28,7 @@ export const SearchBooksPage = () => {
       setSearchQuery(ITBooksAPI.defaultQuery);
     }
     num && setCurrentPage(Number(num));
-  }, [num, query]);
+  }, [query, num, navigate]);
 
   const startSearch = () => {
     const query = searchInput.trim();
