@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BookModel } from "../../models/BookModel";
-import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
-import { LatestReviews } from "./LatestReviews";
+import { CheckoutAndReviewBox } from "./components/CheckoutAndReviewBox";
+import { LatestReviews } from "./components/LatestReviews";
 import { ReviewModel } from "../../models/ReviewModel";
 import { ReviewRequestModel } from "../../models/ReviewRequestModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";

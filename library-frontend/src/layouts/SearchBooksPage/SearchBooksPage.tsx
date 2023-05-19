@@ -103,6 +103,7 @@ export const SearchBooksPage = () => {
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
+                  baseURI={"search"}
                   searchQuery={searchQuery}
                 />
               )}

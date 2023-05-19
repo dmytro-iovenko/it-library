@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ReviewModel } from "../../models/ReviewModel";
+import { Review } from "./Review";
+import { Pagination } from "./Pagination";
+import { SpinnerLoading } from "./SpinnerLoading";
 import * as ReviewsAPI from "../../services/reviews-api";
 
 export const ReviewListPage = () => {
@@ -14,23 +17,67 @@ export const ReviewListPage = () => {
   const [totalReviews, setTotalReviews] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const { isbn } = useParams();
+  const { isbn, page } = useParams();
+
+  useEffect(() => {
+    page && setCurrentPage(Number(page));
+  }, [page]);
 
   useEffect(() => {
     isbn &&
-      ReviewsAPI.getReviewsByISBN(isbn)
+      ReviewsAPI.getReviewsByISBN(isbn, page, reviewsPerPage)
         .then((resultData: any) => {
-          if (resultData._embedded && resultData._embedded.reviews.length > 0) {
+          if (
+            resultData._embedded &&
+            resultData._embedded.reviews.length > 0 &&
+            resultData.page
+          ) {
             setReviews(resultData._embedded.reviews);
-            setTotalReviews(resultData._embedded.totalElements);
-            setTotalPages(resultData._embedded.totalPages);
+            setTotalReviews(resultData.page.totalElements);
+            setTotalPages(resultData.page.totalPages);
           }
         })
         .catch((error: any) => {
           setHttpError(error.message);
         });
     setIsLoading(false);
-  }, [isbn, currentPage]);
+  }, []);
 
-  return <></>;
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
+
+  if (httpError) {
+    return (
+      <div className="container m-5">
+        <p>{httpError}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mt-5">
+      <div>
+        <h3>Comments: ({reviews.length})</h3>
+      </div>
+      <p>
+        {(currentPage - 1) * reviewsPerPage + 1} to{" "}
+        {Math.min(currentPage * reviewsPerPage, totalReviews)} of {totalReviews}{" "}
+        items:
+      </p>
+      <div className="row">
+        {reviews.map((review) => (
+          <Review review={review} key={review.id} />
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          baseURI={`reviewlist/${isbn}`}
+        />
+      )}
+    </div>
+  );
 };

@@ -47,13 +47,13 @@ function indexes(page: number, total: number) {
 export const Pagination: React.FC<{
   currentPage: number;
   totalPages: number;
-  searchQuery: string;
-}> = ({ currentPage, totalPages, searchQuery }) => {
+  baseURI: string;
+  searchQuery?: string;
+}> = ({ currentPage, totalPages, baseURI, searchQuery }) => {
   const baseURL =
-    searchQuery === ITBooksAPI.defaultQuery
-      ? `/search/page/`
-      : `/search/query/${encodeURI(searchQuery)}/page/`;
-
+    searchQuery && searchQuery !== ITBooksAPI.defaultQuery
+      ? `/${baseURI}/query/${encodeURI(searchQuery)}/page/`
+      : `/${baseURI}/page/`;
   return (
     <nav className="mb-5">
       <ul className="pagination flex-wrap">
