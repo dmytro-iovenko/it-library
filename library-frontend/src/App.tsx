@@ -6,6 +6,8 @@ import { BookCheckoutPage } from "./layouts/BookCheckoutPage/BookCheckoutPage";
 import { SearchBooksPage } from "./layouts/SearchBooksPage/SearchBooksPage";
 import { ReviewListPage } from "./layouts/Utils/ReviewListPage";
 import { SpinnerLoading } from "./layouts/Utils/SpinnerLoading";
+import { SecureRoutes } from "./layouts/Utils/SecureRoutes";
+import { ShelfPage } from "./layouts/ShelfPage/ShelfPage";
 import { Security, LoginCallback } from "@okta/okta-react";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import oktaConfig from "./configs/oktaConfig";
@@ -37,6 +39,9 @@ export const App: React.FC = () => {
             <Route path="checkout/book/:isbn" element={<BookCheckoutPage />} />
             <Route path="login" element={<LoginWidget config={oktaConfig.oidc} />} />
             <Route path="login/callback" element={<LoginCallback loadingElement={<SpinnerLoading />} />} />
+            <Route element={<SecureRoutes />}>
+              <Route path="shelf" element={<ShelfPage />} />
+            </Route>
           </Routes>
         </div>
         <Footer />
