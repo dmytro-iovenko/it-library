@@ -1,5 +1,7 @@
 package com.dmio.library.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dmio.library.entity.Checkout;
+import com.dmio.library.model.CurrentLoans;
 import com.dmio.library.service.BookService;
 import com.dmio.library.utils.ExtractJWT;
 
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
@@ -34,6 +37,13 @@ public class BookController {
             @RequestParam String isbn) {
         String userEmail = ExtractJWT.jwtExtraction(token, "sub");
         return new ResponseEntity<>(bookService.checkoutBookByUser(userEmail, isbn), HttpStatus.OK);
+    }
+
+    @GetMapping("/secure/currentLoans")
+    public ResponseEntity<List<CurrentLoans>> currentLoans(@RequestHeader(value = "Authorization") String token)
+            throws Exception {
+        String userEmail = ExtractJWT.jwtExtraction(token, "sub");
+        return new ResponseEntity<>(bookService.currentLoans(userEmail), HttpStatus.OK);
     }
 
     @GetMapping("/secure/currentLoans/count")
