@@ -38,4 +38,4 @@ function checkoutBook(isbn: string, body: string, config: any) {
   return putAxios(url, body, config);
 }
 
-export { getUserCurrentLoansCount, getIsCheckedOutByUser, checkoutBook };
+export { getUserCurrentLoans, getUserCurrentLoansCount, getIsCheckedOutByUser, checkoutBook };
