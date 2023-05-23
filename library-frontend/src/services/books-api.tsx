@@ -23,6 +23,11 @@ function getUserCurrentLoansCount(config: any) {
   return getAxios(url, config);
 }
 
+function getUserCurrentLoans(config: any) {
+  const url = "/secure/currentLoans";
+  return getAxios(url, config);
+}
+
 function getIsCheckedOutByUser(isbn: string, config: any) {
   const url = "/secure/isCheckedOutByUser?isbn=" + isbn;
   return getAxios(url, config);

@@ -38,7 +38,6 @@ export const SearchBooksPage = () => {
   };
 
   useEffect(() => {
-    console.log(searchQuery, currentPage);
     searchQuery.length > 0 &&
       ITBooksAPI.searchBooks(searchQuery, currentPage)
         .then((resultData: any) => {
