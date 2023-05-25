@@ -5,7 +5,7 @@ import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import * as ITBooksAPI from "../../../services/itbooks-api";
 import * as BooksAPI from "../../../services/books-api";
 import { Link } from "react-router-dom";
-import { BookModel } from "../../../models/BookModel";
+import { LoansModal } from "./LoansModal";
 
 export const Loans = () => {
   const { authState } = useOktaAuth();
@@ -63,6 +63,14 @@ export const Loans = () => {
         <p>{httpError}</p>
       </div>
     );
+  }
+
+  const returnBook = (isbn: string) => {
+
+  }
+
+  const renewLoan = (isbn: string) => {
+    
   }
 
   return (
@@ -131,6 +139,8 @@ export const Loans = () => {
                   </div>
                 </div>
                 <hr />
+                <LoansModal currentLoan={currentLoan} mobile={false} returnBook={returnBook} 
+                                renewLoan={renewLoan}/>
               </div>
             ))}
           </>
@@ -209,6 +219,9 @@ export const Loans = () => {
                     </div>
                   </div>
                   <hr />
+                  <LoansModal currentLoan={currentLoan} mobile={true} returnBook={returnBook} 
+                                renewLoan={renewLoan}/>
+
                 </div>
               </div>
             ))}
