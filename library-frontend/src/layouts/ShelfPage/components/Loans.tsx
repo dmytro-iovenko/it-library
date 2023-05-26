@@ -15,8 +15,10 @@ export const Loans = () => {
   const [currentLoans, setCurrentLoans] = useState<CurrentLoans[]>([]);
   const [isLoadingUserLoans, setIsLoadingUserLoans] = useState(true);
   const [isLoadingBooks, setIsLoadingBooks] = useState(true);
+  const [checkout, setCheckout] = useState(false);
 
   useEffect(() => {
+    setIsLoadingUserLoans(true)
     if (authState && authState.isAuthenticated) {
       const config = {
         headers: {
@@ -27,7 +29,12 @@ export const Loans = () => {
 
       BooksAPI.getUserCurrentLoans(config)
         .then((resultData: any) => {
+          if (resultData.length === 0) {
+            setIsLoadingBooks(false);
+          }
+          setCurrentLoans([]);
           for (const loan of resultData) {
+            setIsLoadingBooks(true);
             loan.isbn &&
               ITBooksAPI.getBookByISBN(loan.isbn)
                 .then((resultData: any) =>
@@ -51,7 +58,7 @@ export const Loans = () => {
         });
     }
     window.scrollTo(0, 0);
-  }, [authState]);
+  }, [authState, checkout]);
 
   if (isLoadingUserLoans || isLoadingBooks) {
     return <SpinnerLoading />;
@@ -65,13 +72,23 @@ export const Loans = () => {
     );
   }
 
-  const returnBook = (isbn: string) => {
+  const returnBook = async (isbn: string) => {
+    const url = `http://localhost:8080/api/books/secure/return/?isbn=${isbn}`;
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const checkoutResponse = await fetch(url, requestOptions);
+    if (!checkoutResponse.ok) {
+      throw new Error("Something went wrong!");
+    }
+    setCheckout(!checkout);
+  };
 
-  }
-
-  const renewLoan = (isbn: string) => {
-    
-  }
+  const renewLoan = (isbn: string) => {};
 
   return (
     <div>
@@ -139,8 +156,12 @@ export const Loans = () => {
                   </div>
                 </div>
                 <hr />
-                <LoansModal currentLoan={currentLoan} mobile={false} returnBook={returnBook} 
-                                renewLoan={renewLoan}/>
+                <LoansModal
+                  currentLoan={currentLoan}
+                  mobile={false}
+                  returnBook={returnBook}
+                  renewLoan={renewLoan}
+                />
               </div>
             ))}
           </>
@@ -171,7 +192,7 @@ export const Loans = () => {
                       alt="Book"
                     />
                   </div>
-                  
+
                   <div className="card d-flex mt-5 mb-3">
                     <div className="card-body container">
                       <div className="mt-3">
@@ -219,9 +240,12 @@ export const Loans = () => {
                     </div>
                   </div>
                   <hr />
-                  <LoansModal currentLoan={currentLoan} mobile={true} returnBook={returnBook} 
-                                renewLoan={renewLoan}/>
-
+                  <LoansModal
+                    currentLoan={currentLoan}
+                    mobile={true}
+                    returnBook={returnBook}
+                    renewLoan={renewLoan}
+                  />
                 </div>
               </div>
             ))}
