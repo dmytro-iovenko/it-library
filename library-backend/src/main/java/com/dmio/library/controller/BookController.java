@@ -52,4 +52,12 @@ public class BookController {
         return new ResponseEntity<>(bookService.currentLoansCount(userEmail), HttpStatus.OK);
     }
 
+    @PutMapping("/secure/return")
+    public ResponseEntity<HttpStatus> returnBook(@RequestHeader(value = "Authorization") String token,
+            @RequestParam String isbn) throws Exception {
+        String userEmail = ExtractJWT.jwtExtraction(token, "sub");
+        bookService.returnBook(userEmail, isbn);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
