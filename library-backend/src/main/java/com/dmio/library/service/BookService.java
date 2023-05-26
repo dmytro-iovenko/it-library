@@ -56,4 +56,12 @@ public class BookService {
         return currentLoansList;
     }
 
+    public void returnBook(String userEmail, String isbn) throws Exception {
+        Checkout validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
+        if (validateCheckout == null) {
+            throw new Exception("Book does not exist or not checked out by user");
+        }
+        checkoutRepository.deleteById(validateCheckout.getId());
+    }
+
 }
