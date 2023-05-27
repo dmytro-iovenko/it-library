@@ -88,7 +88,21 @@ export const Loans = () => {
     setCheckout(!checkout);
   };
 
-  const renewLoan = (isbn: string) => {};
+  const renewLoan = async (isbn: string) => {
+    const url = `http://localhost:8080/api/books/secure/renewLoan/?isbn=${isbn}`;
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const checkoutResponse = await fetch(url, requestOptions);
+    if (!checkoutResponse.ok) {
+      throw new Error("Something went wrong!");
+    }
+    setCheckout(!checkout);
+  };
 
   return (
     <div>
