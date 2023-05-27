@@ -43,12 +43,12 @@ public class BookService {
     }
 
     public List<CurrentLoans> currentLoans(String userEmail) throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<CurrentLoans> currentLoansList = new ArrayList<>();
         var checkoutList = checkoutRepository.findBooksByUserEmail(userEmail);
         for (var checkout : checkoutList) {
-            Date returnDate = sdf.parse(checkout.getReturnDate());
-            Date currentDate = sdf.parse(LocalDate.now().toString());
+            Date returnDate = sdFormat.parse(checkout.getReturnDate());
+            Date currentDate = sdFormat.parse(LocalDate.now().toString());
             int daysLeft = (int) TimeUnit.DAYS.convert(returnDate.getTime() - currentDate.getTime(),
                     TimeUnit.MILLISECONDS);
             currentLoansList.add(new CurrentLoans(checkout.getIsbn(), daysLeft));
@@ -62,6 +62,21 @@ public class BookService {
             throw new Exception("Book does not exist or not checked out by user");
         }
         checkoutRepository.deleteById(validateCheckout.getId());
+    }
+
+    public Checkout renewLoan(String userEmail, String isbn) throws Exception {
+        Checkout validateCheckout = checkoutRepository.findByUserEmailAndIsbn(userEmail, isbn);
+        if (validateCheckout == null) {
+            throw new Exception("Book does not exist or not checked out by user");
+        }
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date returnDate = sdFormat.parse(validateCheckout.getReturnDate());
+        Date currentDate = sdFormat.parse(LocalDate.now().toString());
+        if (returnDate.compareTo(currentDate) < 0) {
+            throw new Exception("You cannot renew expired loan");
+        }
+        validateCheckout.setReturnDate(LocalDate.now().plusDays(7).toString());
+        return checkoutRepository.save(validateCheckout);
     }
 
 }
