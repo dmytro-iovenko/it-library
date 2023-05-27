@@ -60,4 +60,11 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/secure/renewLoan")
+    public ResponseEntity<Checkout> renewLoan(@RequestHeader(value = "Authorization") String token,
+            @RequestParam String isbn) throws Exception {
+        String userEmail = ExtractJWT.jwtExtraction(token, "sub");
+        return new ResponseEntity<>(bookService.renewLoan(userEmail, isbn), HttpStatus.OK);
+    }
+
 }
