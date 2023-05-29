@@ -8,6 +8,7 @@ import { ReviewListPage } from "./layouts/Utils/ReviewListPage";
 import { SpinnerLoading } from "./layouts/Utils/SpinnerLoading";
 import { SecureRoutes } from "./layouts/Utils/SecureRoutes";
 import { ShelfPage } from "./layouts/ShelfPage/ShelfPage";
+import { MessagesPage } from "./layouts/MessagesPage/MessagesPage";
 import { Security, LoginCallback } from "@okta/okta-react";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import oktaConfig from "./configs/oktaConfig";
@@ -41,6 +42,7 @@ export const App: React.FC = () => {
             <Route path="login/callback" element={<LoginCallback loadingElement={<SpinnerLoading />} />} />
             <Route element={<SecureRoutes />}>
               <Route path="shelf" element={<ShelfPage />} />
+              <Route path="messages" element={<MessagesPage />} />
             </Route>
           </Routes>
         </div>
