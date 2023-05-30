@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PostMessage } from "./components/PostMessage";
 
 export const MessagesPage = () => {
   const [messagesClick, setMessagesClick] = useState(false);
@@ -43,7 +44,7 @@ export const MessagesPage = () => {
             role="tabpanel"
             aria-labelledby="nav-send-message-tab"
           >
-            <p>Post new message</p>
+            <PostMessage />
           </div>
           <div
             className="tab-pane fade"
