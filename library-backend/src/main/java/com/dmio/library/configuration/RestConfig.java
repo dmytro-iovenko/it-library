@@ -6,6 +6,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import com.dmio.library.entity.Message;
 import com.dmio.library.entity.Review;
 
 @Configuration
@@ -22,6 +23,7 @@ public class RestConfig implements RepositoryRestConfigurer {
                 HttpMethod.PUT };
 
         config.exposeIdsFor(Review.class);
+        config.exposeIdsFor(Message.class);
 
         disableHttpMethods(Review.class, config, unsupportedActions);
 
