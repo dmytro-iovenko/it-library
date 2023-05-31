@@ -43,6 +43,7 @@ export const App: React.FC = () => {
             <Route element={<SecureRoutes />}>
               <Route path="shelf" element={<ShelfPage />} />
               <Route path="messages" element={<MessagesPage />} />
+              <Route path="messages/page/:num" element={<MessagesPage />} />
             </Route>
           </Routes>
         </div>
