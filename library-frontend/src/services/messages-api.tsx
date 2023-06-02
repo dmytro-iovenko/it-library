@@ -11,4 +11,9 @@ function getMessagesByUserEmail(email?: string, page?: number, size?: number) {
   return getAxios(url);
 }
 
-export { getMessagesByUserEmail };
+function getMessagesByClosed(page?: number, size?: number) {
+  const url = "/search/findByClosed/?closed=false" + (page ? "&page=" + page : "") + (size ? "&size=" + size : "");
+  return getAxios(url);
+}
+
+export { getMessagesByUserEmail, getMessagesByClosed };

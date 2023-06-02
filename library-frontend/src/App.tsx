@@ -45,7 +45,9 @@ export const App: React.FC = () => {
               <Route path="shelf" element={<ShelfPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="messages/page/:num" element={<MessagesPage />} />
-              <Route path="admin" element={<AdminPage />} />
+              <Route path="admin" element={<Navigate replace to="/admin/messages" />} />
+              <Route path="admin/messages" element={<AdminPage />} />
+              <Route path="admin/messages/page/:num" element={<AdminPage />} />
             </Route>
           </Routes>
         </div>

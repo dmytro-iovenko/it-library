@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
+import { AdminMessages } from "./components/AdminMessages";
 
 export const AdminPage = () => {
   const { authState } = useOktaAuth();
+  const [messages] = useState(true);
 
   return (
     <>
@@ -34,7 +37,7 @@ export const AdminPage = () => {
               role="tabpanel"
               aria-labelledby="nav-messages-tab"
             >
-              <p>AdminMessages</p>
+              {messages && <AdminMessages />}
             </div>
           </div>
         </div>
