@@ -5,6 +5,7 @@ import * as MessagesAPI from "../../../services/messages-api";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { useNavigate, useParams } from "react-router-dom";
 import { Pagination } from "../../Utils/Pagination";
+import { AdminMessage } from "./AdminMessage";
 
 export const AdminMessages = () => {
   // Normal Loading Pieces
@@ -18,6 +19,7 @@ export const AdminMessages = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalMessages, setTotalMessages] = useState(0);
 
   // Recall useEffect
   const [btnSubmit, setBtnSubmit] = useState(false);
@@ -44,6 +46,7 @@ export const AdminMessages = () => {
           ) {
             setMessages(resultData._embedded.messages);
             setTotalPages(resultData.page.totalPages);
+            setTotalMessages(resultData.page.totalElements);
           }
         })
         .then(() => setIsLoadingMessages(false))
@@ -69,9 +72,9 @@ export const AdminMessages = () => {
     <div className="mt-3">
       {messages.length > 0 ? (
         <>
-          <h5>Pending Q/A: </h5>
+          <h5>Pending Q/A ({totalMessages} messages): </h5>
           {messages.map((message) => (
-            <p>Admin Message</p>
+            <AdminMessage message={message} key={message.id} />
           ))}
         </>
       ) : (
