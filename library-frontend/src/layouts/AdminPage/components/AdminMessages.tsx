@@ -1,11 +1,12 @@
-import { useOktaAuth } from "@okta/okta-react";
 import { useEffect, useState } from "react";
-import { MessageModel } from "../../../models/MessageModel";
-import * as MessagesAPI from "../../../services/messages-api";
-import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { useNavigate, useParams } from "react-router-dom";
-import { Pagination } from "../../Utils/Pagination";
+import { useOktaAuth } from "@okta/okta-react";
 import { AdminMessage } from "./AdminMessage";
+import { AdminMessageModel } from "../../../models/AdminMessageModel";
+import { MessageModel } from "../../../models/MessageModel";
+import { Pagination } from "../../Utils/Pagination";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
+import * as MessagesAPI from "../../../services/messages-api";
 
 export const AdminMessages = () => {
   // Normal Loading Pieces
@@ -38,7 +39,6 @@ export const AdminMessages = () => {
       authState?.isAuthenticated &&
       MessagesAPI.getMessagesByClosed(currentPage - 1, messagesPerPage)
         .then((resultData: any) => {
-          console.log(resultData);
           if (
             resultData._embedded &&
             resultData._embedded.messages.length > 0 &&
@@ -47,6 +47,10 @@ export const AdminMessages = () => {
             setMessages(resultData._embedded.messages);
             setTotalPages(resultData.page.totalPages);
             setTotalMessages(resultData.page.totalElements);
+          } else {
+            setMessages([]);
+            setTotalPages(0);
+            setTotalMessages(0);
           }
         })
         .then(() => setIsLoadingMessages(false))
@@ -54,7 +58,7 @@ export const AdminMessages = () => {
           setHttpError(error.message);
           setIsLoadingMessages(false);
         });
-  }, [currentPage, messagesPerPage]);
+  }, [authState, currentPage, messagesPerPage, btnSubmit]);
 
   if (isLoadingMessages) {
     return <SpinnerLoading />;
@@ -68,13 +72,46 @@ export const AdminMessages = () => {
     );
   }
 
+  async function submitResponseToQuestion(id: number, response: string) {
+    const url = `http://localhost:8080/api/messages/secure/admin/message`;
+    if (
+      authState &&
+      authState?.isAuthenticated &&
+      id !== null &&
+      response !== ""
+    ) {
+      const adminMessage: AdminMessageModel = new AdminMessageModel(
+        id,
+        response
+      );
+      const requestOptions = {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(adminMessage),
+      };
+
+      const adminMessageResponse = await fetch(url, requestOptions);
+      if (!adminMessageResponse.ok) {
+        throw new Error("Something went wrong!");
+      }
+      setBtnSubmit(!btnSubmit);
+    }
+  }
+
   return (
     <div className="mt-3">
       {messages.length > 0 ? (
         <>
           <h5>Pending Q/A ({totalMessages} messages): </h5>
           {messages.map((message) => (
-            <AdminMessage message={message} key={message.id} />
+            <AdminMessage
+              message={message}
+              key={message.id}
+              submitResponseToQuestion={submitResponseToQuestion}
+            />
           ))}
         </>
       ) : (

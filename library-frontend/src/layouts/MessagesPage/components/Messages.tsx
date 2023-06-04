@@ -49,7 +49,7 @@ export const Messages = () => {
           setHttpError(error.message);
           setIsLoadingMessages(false);
         });
-  }, [currentPage, messagesPerPage]);
+  }, [authState, currentPage, messagesPerPage]);
 
   if (isLoadingMessages) {
     return <SpinnerLoading />;
